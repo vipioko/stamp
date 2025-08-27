@@ -22,6 +22,11 @@ import { Orders } from "./pages/admin/Orders";
 import { OrderDetails } from "./pages/admin/OrderDetails";
 import { Products } from "./pages/admin/catalog/Products";
 import { ProductForm } from "./pages/admin/catalog/ProductForm";
+import { Categories } from "./pages/admin/catalog/Categories";
+import { BulkUpload } from "./pages/admin/catalog/BulkUpload";
+import { States } from "./pages/admin/geo/States";
+import { Districts } from "./pages/admin/geo/Districts";
+import { Tehsils } from "./pages/admin/geo/Tehsils";
 
 const queryClient = new QueryClient();
 
@@ -46,6 +51,11 @@ const App = () => (
                 <Route path="catalog/products" element={<Products />} />
                 <Route path="catalog/products/new" element={<ProductForm />} />
                 <Route path="catalog/products/:id/edit" element={<ProductForm />} />
+                <Route path="catalog/categories" element={<Categories />} />
+                <Route path="catalog/bulk-upload" element={<BulkUpload />} />
+                <Route path="geo/states" element={<States />} />
+                <Route path="geo/districts" element={<Districts />} />
+                <Route path="geo/tehsils" element={<Tehsils />} />
                 <Route path="users" element={<div className="p-6"><h1 className="text-2xl font-bold">Users Management</h1><p className="text-muted-foreground">Coming soon...</p></div>} />
                 <Route path="reports" element={<div className="p-6"><h1 className="text-2xl font-bold">Reports</h1><p className="text-muted-foreground">Coming soon...</p></div>} />
                 <Route path="settings" element={<div className="p-6"><h1 className="text-2xl font-bold">Settings</h1><p className="text-muted-foreground">Coming soon...</p></div>} />

@@ -81,6 +81,36 @@ export interface Order {
 }
 
 // States
+export const createState = async (stateData: Omit<State, 'id'>): Promise<string> => {
+  try {
+    const docRef = await addDoc(collection(db, 'states'), stateData);
+    return docRef.id;
+  } catch (error) {
+    console.error('Error creating state:', error);
+    throw error;
+  }
+};
+
+export const updateState = async (stateId: string, updates: Partial<State>): Promise<void> => {
+  try {
+    const stateRef = doc(db, 'states', stateId);
+    await updateDoc(stateRef, updates);
+  } catch (error) {
+    console.error('Error updating state:', error);
+    throw error;
+  }
+};
+
+export const deleteState = async (stateId: string): Promise<void> => {
+  try {
+    const stateRef = doc(db, 'states', stateId);
+    await deleteDoc(stateRef);
+  } catch (error) {
+    console.error('Error deleting state:', error);
+    throw error;
+  }
+};
+
 export const getStates = async (): Promise<State[]> => {
   try {
     const querySnapshot = await getDocs(collection(db, 'states'));
@@ -92,6 +122,46 @@ export const getStates = async (): Promise<State[]> => {
 };
 
 // Districts
+export const createDistrict = async (districtData: Omit<District, 'id'>): Promise<string> => {
+  try {
+    const docRef = await addDoc(collection(db, 'districts'), districtData);
+    return docRef.id;
+  } catch (error) {
+    console.error('Error creating district:', error);
+    throw error;
+  }
+};
+
+export const updateDistrict = async (districtId: string, updates: Partial<District>): Promise<void> => {
+  try {
+    const districtRef = doc(db, 'districts', districtId);
+    await updateDoc(districtRef, updates);
+  } catch (error) {
+    console.error('Error updating district:', error);
+    throw error;
+  }
+};
+
+export const deleteDistrict = async (districtId: string): Promise<void> => {
+  try {
+    const districtRef = doc(db, 'districts', districtId);
+    await deleteDoc(districtRef);
+  } catch (error) {
+    console.error('Error deleting district:', error);
+    throw error;
+  }
+};
+
+export const getAllDistricts = async (): Promise<District[]> => {
+  try {
+    const querySnapshot = await getDocs(collection(db, 'districts'));
+    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as District));
+  } catch (error) {
+    console.error('Error fetching all districts:', error);
+    throw error;
+  }
+};
+
 export const getDistricts = async (stateId: string): Promise<District[]> => {
   try {
     const q = query(collection(db, 'districts'), where('stateId', '==', stateId));
@@ -104,6 +174,46 @@ export const getDistricts = async (stateId: string): Promise<District[]> => {
 };
 
 // Tehsils
+export const createTehsil = async (tehsilData: Omit<Tehsil, 'id'>): Promise<string> => {
+  try {
+    const docRef = await addDoc(collection(db, 'tehsils'), tehsilData);
+    return docRef.id;
+  } catch (error) {
+    console.error('Error creating tehsil:', error);
+    throw error;
+  }
+};
+
+export const updateTehsil = async (tehsilId: string, updates: Partial<Tehsil>): Promise<void> => {
+  try {
+    const tehsilRef = doc(db, 'tehsils', tehsilId);
+    await updateDoc(tehsilRef, updates);
+  } catch (error) {
+    console.error('Error updating tehsil:', error);
+    throw error;
+  }
+};
+
+export const deleteTehsil = async (tehsilId: string): Promise<void> => {
+  try {
+    const tehsilRef = doc(db, 'tehsils', tehsilId);
+    await deleteDoc(tehsilRef);
+  } catch (error) {
+    console.error('Error deleting tehsil:', error);
+    throw error;
+  }
+};
+
+export const getAllTehsils = async (): Promise<Tehsil[]> => {
+  try {
+    const querySnapshot = await getDocs(collection(db, 'tehsils'));
+    return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Tehsil));
+  } catch (error) {
+    console.error('Error fetching all tehsils:', error);
+    throw error;
+  }
+};
+
 export const getTehsils = async (districtId: string): Promise<Tehsil[]> => {
   try {
     const q = query(collection(db, 'tehsils'), where('districtId', '==', districtId));
@@ -116,6 +226,36 @@ export const getTehsils = async (districtId: string): Promise<Tehsil[]> => {
 };
 
 // Stamp Categories
+export const createStampCategory = async (categoryData: Omit<StampCategory, 'id'>): Promise<string> => {
+  try {
+    const docRef = await addDoc(collection(db, 'stampCategories'), categoryData);
+    return docRef.id;
+  } catch (error) {
+    console.error('Error creating stamp category:', error);
+    throw error;
+  }
+};
+
+export const updateStampCategory = async (categoryId: string, updates: Partial<StampCategory>): Promise<void> => {
+  try {
+    const categoryRef = doc(db, 'stampCategories', categoryId);
+    await updateDoc(categoryRef, updates);
+  } catch (error) {
+    console.error('Error updating stamp category:', error);
+    throw error;
+  }
+};
+
+export const deleteStampCategory = async (categoryId: string): Promise<void> => {
+  try {
+    const categoryRef = doc(db, 'stampCategories', categoryId);
+    await deleteDoc(categoryRef);
+  } catch (error) {
+    console.error('Error deleting stamp category:', error);
+    throw error;
+  }
+};
+
 export const getStampCategories = async (): Promise<StampCategory[]> => {
   try {
     const querySnapshot = await getDocs(collection(db, 'stampCategories'));

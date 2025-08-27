@@ -31,6 +31,31 @@ const adminNavItems = [
     icon: Package,
   },
   {
+    title: 'Categories',
+    href: '/admin/catalog/categories',
+    icon: FileText,
+  },
+  {
+    title: 'States',
+    href: '/admin/geo/states',
+    icon: MapPin,
+  },
+  {
+    title: 'Districts',
+    href: '/admin/geo/districts',
+    icon: MapPin,
+  },
+  {
+    title: 'Tehsils',
+    href: '/admin/geo/tehsils',
+    icon: MapPin,
+  },
+  {
+    title: 'Bulk Upload',
+    href: '/admin/catalog/bulk-upload',
+    icon: Package,
+  },
+  {
     title: 'Users',
     href: '/admin/users',
     icon: Users,
