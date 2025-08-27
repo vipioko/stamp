@@ -8,6 +8,8 @@ import { Header } from "@/components/Layout/Header";
 import { AdminRoute } from "@/components/Auth/AdminRoute";
 import { AdminLayout } from "@/components/Layout/AdminLayout";
 import { Landing } from "./pages/Landing";
+import { Login } from "./pages/Login";
+import { Register } from "./pages/Register";
 import { SelectState } from "./pages/SelectState";
 import { SelectDistrict } from "./pages/SelectDistrict";
 import { PartyDetails } from "./pages/PartyDetails";
@@ -56,6 +58,8 @@ const App = () => (
                   <main>
                     <Routes>
                       <Route path="/" element={<Landing />} />
+                      <Route path="/login" element={<Login />} />
+                      <Route path="/register" element={<Register />} />
                       <Route path="/select-state" element={<SelectState />} />
                       <Route path="/select-district" element={<SelectDistrict />} />
                       <Route path="/party-details" element={<PartyDetails />} />
