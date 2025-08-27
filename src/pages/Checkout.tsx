@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
+import { createOrder, getStampProductById, type StampProduct } from "@/lib/firestore";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -9,22 +11,30 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, CreditCard, Shield, Lock, FileText, User, MapPin, Calendar } from "lucide-react";
+import { useEffect } from "react";
 
 export const Checkout = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { user } = useAuth();
   
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
+  const [productDetails, setProductDetails] = useState<StampProduct | null>(null);
+  const [loadingProduct, setLoadingProduct] = useState(true);
 
   const transactionValue = searchParams.get("transactionValue");
   const documentType = searchParams.get("documentType");
   const firstPartyName = searchParams.get("firstPartyName");
   const secondPartyName = searchParams.get("secondPartyName");
   const deliveryType = searchParams.get("deliveryType") || "digital";
+  const productId = searchParams.get("productId");
+  const stateId = searchParams.get("state");
+  const districtId = searchParams.get("district");
+  const tehsilId = searchParams.get("tehsil");
   
   // Calculate stamp duty (same logic as StampSelection)
   const baseAmount = parseInt(transactionValue || "0");
@@ -38,7 +48,34 @@ export const Checkout = () => {
   }
   const stampAmount = Math.round(baseAmount * stampDutyRate);
   const deliveryFee = deliveryType === "physical" ? 50 : 0;
-  const totalAmount = stampAmount + deliveryFee;
+  const platformFee = productDetails?.platformFee || 0;
+  const expressFee = productDetails?.expressFee || 0;
+  const totalAmount = stampAmount + platformFee + expressFee + deliveryFee;
+
+  useEffect(() => {
+    const fetchProductDetails = async () => {
+      if (!productId) {
+        setLoadingProduct(false);
+        return;
+      }
+
+      try {
+        const product = await getStampProductById(productId);
+        setProductDetails(product);
+      } catch (error) {
+        console.error("Error fetching product details:", error);
+        toast({
+          title: "Error",
+          description: "Failed to load product details.",
+          variant: "destructive",
+        });
+      } finally {
+        setLoadingProduct(false);
+      }
+    };
+
+    fetchProductDetails();
+  }, [productId, toast]);
 
   const formatDocumentType = (type: string) => {
     return type.split('_').map(word => 
@@ -61,16 +98,61 @@ export const Checkout = () => {
       return;
     }
 
+    if (!user) {
+      toast({
+        title: "Authentication Required",
+        description: "Please log in to complete your order.",
+        variant: "destructive",
+      });
+      navigate("/login");
+      return;
+    }
+
+    if (!productDetails || !stateId || !districtId || !tehsilId || !firstPartyName || !secondPartyName) {
+      toast({
+        title: "Missing Order Information",
+        description: "Some required order information is missing. Please start over.",
+        variant: "destructive",
+      });
+      navigate("/select-state");
+      return;
+    }
     setIsProcessing(true);
     try {
       // Simulate payment processing
       await new Promise(resolve => setTimeout(resolve, 2000));
       
+      // Create order in Firebase
+      const orderToSave = {
+        userId: user.uid,
+        productId: productId!,
+        stateId: stateId!,
+        districtId: districtId!,
+        tehsilId: tehsilId!,
+        party1Name: firstPartyName!,
+        party2Name: secondPartyName!,
+        email,
+        phone,
+        deliveryType: deliveryType === "physical" ? "door" as const : "digital" as const,
+        stampAmount,
+        platformFee,
+        expressFee,
+        deliveryFee,
+        totalPaid: totalAmount,
+        status: "pending" as const,
+      };
+
+      const orderId = await createOrder(orderToSave);
+      
       const orderData = {
+        id: orderId,
         email,
         phone,
         stampAmount,
+        platformFee,
+        expressFee,
         deliveryType,
+        deliveryFee,
         totalAmount,
         ...Object.fromEntries(searchParams.entries())
       };
@@ -80,9 +162,10 @@ export const Checkout = () => {
       
       navigate("/order-confirmation");
     } catch (error) {
+      console.error("Payment/Order creation error:", error);
       toast({
         title: "Payment Failed",
-        description: "There was an error processing your payment. Please try again.",
+        description: "There was an error processing your order. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -90,6 +173,16 @@ export const Checkout = () => {
     }
   };
 
+  if (loadingProduct) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
+          <p className="text-muted-foreground">Loading order details...</p>
+        </div>
+      </div>
+    );
+  }
   return (
     <div className="min-h-screen bg-gradient-to-br from-background to-secondary/20">
       <div className="container mx-auto px-4 py-8 max-w-6xl">
@@ -146,6 +239,20 @@ export const Checkout = () => {
                     <span className="text-sm">Stamp Duty</span>
                     <span className="font-medium">₹{stampAmount.toLocaleString()}</span>
                   </div>
+                  
+                  {platformFee > 0 && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Platform Fee</span>
+                      <span className="font-medium">₹{platformFee.toLocaleString()}</span>
+                    </div>
+                  )}
+                  
+                  {expressFee > 0 && (
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm">Express Fee</span>
+                      <span className="font-medium">₹{expressFee.toLocaleString()}</span>
+                    </div>
+                  )}
                   
                   <div className="flex justify-between items-center">
                     <span className="text-sm">Delivery ({deliveryType})</span>

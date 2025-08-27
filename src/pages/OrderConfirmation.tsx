@@ -8,10 +8,14 @@ import { Separator } from "@/components/ui/separator";
 import { CheckCircle, Download, Mail, MessageCircle, FileText, Calendar, User, MapPin, Home } from "lucide-react";
 
 interface OrderData {
+  id: string;
   email: string;
   phone: string;
   stampAmount: number;
+  platformFee: number;
+  expressFee: number;
   deliveryType: string;
+  deliveryFee: number;
   totalAmount: number;
   firstPartyName: string;
   secondPartyName: string;
@@ -23,7 +27,6 @@ interface OrderData {
 export const OrderConfirmation = () => {
   const navigate = useNavigate();
   const [orderData, setOrderData] = useState<OrderData | null>(null);
-  const [orderId] = useState(() => `EST${Date.now().toString().slice(-8)}`);
 
   useEffect(() => {
     const storedOrderData = localStorage.getItem('orderData');
@@ -45,7 +48,7 @@ export const OrderConfirmation = () => {
     // Simulate PDF generation and download
     const element = document.createElement('a');
     element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent('E-Stamp PDF Document'));
-    element.setAttribute('download', `e-stamp-${orderId}.pdf`);
+    element.setAttribute('download', `e-stamp-${orderData?.id || 'unknown'}.pdf`);
     element.style.display = 'none';
     document.body.appendChild(element);
     element.click();
@@ -59,7 +62,7 @@ export const OrderConfirmation = () => {
 
   const sendWhatsApp = () => {
     // Simulate WhatsApp sharing
-    const message = `Your e-stamp (Order: ${orderId}) is ready! Download it from our portal.`;
+    const message = `Your e-stamp (Order: ${orderData?.id || 'unknown'}) is ready! Download it from our portal.`;
     const whatsappUrl = `https://wa.me/${orderData?.phone?.replace(/\D/g, '')}?text=${encodeURIComponent(message)}`;
     window.open(whatsappUrl, '_blank');
   };
@@ -99,7 +102,7 @@ export const OrderConfirmation = () => {
             </p>
             <div className="bg-success/10 border border-success/20 rounded-lg p-4 inline-block">
               <p className="text-sm font-medium text-success">Order ID</p>
-              <p className="text-xl font-bold text-success">{orderId}</p>
+              <p className="text-xl font-bold text-success">{orderData.id}</p>
             </div>
           </CardContent>
         </Card>
@@ -247,9 +250,21 @@ export const OrderConfirmation = () => {
                       <span>Stamp Duty</span>
                       <span>₹{orderData.stampAmount.toLocaleString()}</span>
                     </div>
+                    {orderData.platformFee > 0 && (
+                      <div className="flex justify-between">
+                        <span>Platform Fee</span>
+                        <span>₹{orderData.platformFee.toLocaleString()}</span>
+                      </div>
+                    )}
+                    {orderData.expressFee > 0 && (
+                      <div className="flex justify-between">
+                        <span>Express Fee</span>
+                        <span>₹{orderData.expressFee.toLocaleString()}</span>
+                      </div>
+                    )}
                     <div className="flex justify-between">
                       <span>Delivery ({orderData.deliveryType})</span>
-                      <span>{orderData.deliveryType === "digital" ? "Free" : "₹50"}</span>
+                      <span>{orderData.deliveryType === "digital" ? "Free" : `₹${orderData.deliveryFee}`}</span>
                     </div>
                     <Separator className="my-2" />
                     <div className="flex justify-between font-semibold text-base">

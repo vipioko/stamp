@@ -55,7 +55,7 @@ export interface StampProduct {
 export interface Order {
   id: string;
   userId: string;
-  productId: string;
+  productId?: string;
   stateId: string;
   districtId: string;
   tehsilId: string;
