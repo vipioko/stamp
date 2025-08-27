@@ -10,7 +10,8 @@ import {
   BarChart3, 
   Settings,
   FileText,
-  Home
+  Home,
+  MapPin
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
