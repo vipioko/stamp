@@ -5,7 +5,10 @@ import {
   signOut, 
   onAuthStateChanged,
   User,
-  updateProfile
+  updateProfile,
+  signInWithPhoneNumber,
+  RecaptchaVerifier,
+  ConfirmationResult
 } from "firebase/auth";
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { auth, db } from "./firebase";

@@ -62,7 +62,7 @@ export const Header = () => {
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end" className="w-48">
                     <DropdownMenuItem asChild>
-                      <Link to="/orders" className="flex items-center">
+                      <Link to="/my-orders" className="flex items-center">
                         <FileText className="mr-2 h-4 w-4" />
                         My Orders
                       </Link>

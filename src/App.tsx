@@ -16,6 +16,9 @@ import { PartyDetails } from "./pages/PartyDetails";
 import { StampSelection } from "./pages/StampSelection";
 import { Checkout } from "./pages/Checkout";
 import { OrderConfirmation } from "./pages/OrderConfirmation";
+import { MyOrders } from "./pages/MyOrders";
+import { OrderDetail } from "./pages/OrderDetail";
+import { OtpLogin } from "./pages/OtpLogin";
 import NotFound from "./pages/NotFound";
 import { Dashboard } from "./pages/admin/Dashboard";
 import { Orders } from "./pages/admin/Orders";
@@ -70,6 +73,9 @@ const App = () => (
                       <Route path="/" element={<Landing />} />
                       <Route path="/login" element={<Login />} />
                       <Route path="/register" element={<Register />} />
+                      <Route path="/otp-login" element={<OtpLogin />} />
+                      <Route path="/my-orders" element={<MyOrders />} />
+                      <Route path="/order/:id" element={<OrderDetail />} />
                       <Route path="/select-state" element={<SelectState />} />
                       <Route path="/select-district" element={<SelectDistrict />} />
                       <Route path="/party-details" element={<PartyDetails />} />

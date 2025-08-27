@@ -317,7 +317,8 @@ export const getUserOrders = async (userId: string): Promise<Order[]> => {
     return querySnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as Order));
   } catch (error) {
     console.error('Error fetching user orders:', error);
-    throw error;
+    // Return empty array if there's an error to prevent app crashes
+    return [];
   }
 };
 

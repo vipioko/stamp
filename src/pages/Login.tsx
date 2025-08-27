@@ -128,6 +128,12 @@ export const Login = () => {
                 Sign up here
               </Link>
             </p>
+            <p className="text-sm text-muted-foreground mt-2">
+              Or{" "}
+              <Link to="/otp-login" className="text-primary hover:underline font-medium">
+                Login with OTP
+              </Link>
+            </p>
           </div>
 
           <div className="mt-4 text-center">
