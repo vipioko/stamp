@@ -10,6 +10,13 @@ import {
 import { doc, setDoc, getDoc } from "firebase/firestore";
 import { auth, db } from "./firebase";
 
+// Admin email allowlist - replace with your admin emails
+const ADMIN_EMAILS = [
+  'admin@estamp.com',
+  'support@estamp.com',
+  // Add more admin emails here
+];
+
 export interface UserProfile {
   uid: string;
   email: string;
@@ -18,6 +25,12 @@ export interface UserProfile {
   createdAt: Date;
   updatedAt: Date;
 }
+
+// Check if user is admin
+export const isAdminUser = (user: User | null): boolean => {
+  if (!user || !user.email) return false;
+  return ADMIN_EMAILS.includes(user.email.toLowerCase());
+};
 
 // Sign up with email and password
 export const signUp = async (email: string, password: string, displayName?: string) => {

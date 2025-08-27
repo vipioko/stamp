@@ -7,13 +7,13 @@ import { getStorage } from "firebase/storage";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyApK-BsDf9I0ec3Z0DuoqwF9XKX2bSJoZs",
-  authDomain: "business-extractor-39069.firebaseapp.com",
-  projectId: "business-extractor-39069",
-  storageBucket: "business-extractor-39069.firebasestorage.app",
-  messagingSenderId: "622707814279",
-  appId: "1:622707814279:web:c0ceaab0ab80b585aa6d22",
-  measurementId: "G-K0516V18T9"
+  apiKey: "AIzaSyC7Zt5bErob58hnlafbZTTRzWzAZ_Agdmg",
+  authDomain: "stamp-iokode.firebaseapp.com",
+  projectId: "stamp-iokode",
+  storageBucket: "stamp-iokode.firebasestorage.app",
+  messagingSenderId: "1065350474534",
+  appId: "1:1065350474534:web:4e3bd59b1178db8687afe7",
+  measurementId: "G-3SXS705MRJ"
 };
 
 // Initialize Firebase

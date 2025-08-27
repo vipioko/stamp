@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { FileText, User, LogOut } from "lucide-react";
+import { FileText, User, LogOut, Settings } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 import { signOutUser } from "@/lib/auth";
@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export const Header = () => {
-  const { user, loading } = useAuth();
+  const { user, loading, isAdmin } = useAuth();
 
   const handleSignOut = async () => {
     try {
@@ -44,6 +44,14 @@ export const Header = () => {
         <div className="flex items-center space-x-4">
           {!loading && (
             <>
+              {isAdmin && (
+                <Button variant="ghost" size="sm" asChild>
+                  <Link to="/admin/dashboard" className="flex items-center space-x-2">
+                    <Settings className="h-4 w-4" />
+                    <span className="hidden sm:inline">Admin</span>
+                  </Link>
+                </Button>
+              )}
               {user ? (
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
